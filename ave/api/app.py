@@ -14,6 +14,7 @@ from sse_starlette.sse import EventSourceResponse
 from ave.config import load_config
 from ave.hardware import detect
 from ave.jobs import MANAGER
+from ave.progress.api import router as jobs_router
 from ave.projects import (
     all_projects,
     analyze_project,
@@ -31,6 +32,7 @@ from ave.projects import (
 from ave.secrets import delete_api_key, has_api_key, set_api_key
 
 app = FastAPI(title="Local Agentic Video Editor")
+app.include_router(jobs_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://127.0.0.1:5173", "http://localhost:5173", "http://127.0.0.1:8000"],
