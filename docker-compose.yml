@@ -1,0 +1,99 @@
+# Local-first stack. Every published port is bound to 127.0.0.1.
+# Models run on the Mac GPU via Docker Model Runner, outside the Linux VM.
+# Media folders are mounted by the generated docker-compose.override.yml.
+
+name: ave
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.web
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  api: &app
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api
+    command: uvicorn ave.api.app:app --host 0.0.0.0 --port 8000
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://ave:ave@db:5432/ave
+      REDIS_URL: redis://redis:6379/0
+      MODEL_RUNNER_URL: http://model-runner.docker.internal/engines/v1
+      OLLAMA_URL: http://host.docker.internal:11434
+      EXPORT_DIR: /exports
+      AVE_IN_DOCKER: "1"
+    volumes:
+      - ${EXPORT_DIR:-./exports}:/exports
+      - cache:/cache
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    models:
+      - agent_llm
+      - vision
+
+  worker:
+    <<: *app
+    command: python -m ave.worker
+    ports: []
+    healthcheck:
+      disable: true
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ave
+      POSTGRES_PASSWORD: ave
+      POSTGRES_DB: ave
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ave -d ave"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+models:
+  agent_llm:
+    model: ai/qwen2.5:7B-Q4_K_M
+    context_size: 8192
+  vision:
+    model: ai/qwen2.5vl:3B
+    context_size: 4096
+
+volumes:
+  pgdata: {}
+  cache: {}

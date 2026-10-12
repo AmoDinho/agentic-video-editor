@@ -1,0 +1,4 @@
+# One footage folder per line. `make up` mounts each read-only at /media/<name>.
+# Source files are never modified. Exports go to EXPORT_DIR, not these folders.
+# ~/Movies/Footage 2026
+# /Volumes/T7/GoPro
