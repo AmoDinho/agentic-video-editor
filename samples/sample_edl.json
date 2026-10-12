@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "project_id": "sample",
+  "output": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30.0,
+    "audio_rate": 48000
+  },
+  "target_duration_s": 6.0,
+  "segments": [
+    {
+      "id": "seg_001",
+      "source": "clips/clip_24fps_720p.mp4",
+      "in_s": 1.0,
+      "out_s": 3.0,
+      "audio": "source",
+      "role": "b_roll",
+      "reason": "Opening color card from 24fps clip",
+      "locked": false
+    },
+    {
+      "id": "seg_002",
+      "source": "clips/clip_30fps_1080p.mp4",
+      "in_s": 0.5,
+      "out_s": 2.5,
+      "audio": "source",
+      "role": "a_roll",
+      "reason": "Middle stretch from 30fps 1080p clip",
+      "locked": false
+    },
+    {
+      "id": "seg_003",
+      "source": "clips/clip_25fps_480p.mp4",
+      "in_s": 1.0,
+      "out_s": 3.0,
+      "audio": "source",
+      "role": "b_roll",
+      "reason": "Close on 25fps 480p clip",
+      "locked": false
+    }
+  ],
+  "notes": "Hand-written Phase 0 EDL mixing three frame rates and resolutions"
+}

@@ -1,0 +1,31 @@
+paths:
+  cache_dir: ~/.cache/ave
+  projects_dir: ~/.local/share/ave/projects
+
+llm:
+  provider: ollama
+  model: qwen2.5:7b-instruct
+  vision_model: qwen2.5vl:3b
+  base_url: http://localhost:11434
+  api_key_env: null
+  max_iterations: 4
+  max_tokens_per_run: 200000
+
+render:
+  preview_height: 540
+  preview_encoder: h264_videotoolbox
+  final_encoder: libx264
+  audio_fade_ms: 15
+  loudnorm_lufs: -14.0
+  default_width: 1920
+  default_height: 1080
+  default_fps: 30.0
+  default_audio_rate: 48000
+
+analysis:
+  min_shot_s: 0.3
+  whisper_model: large-v3-turbo
+  clip_model: ViT-B-32
+  vad_threshold: 0.5
+  scene_threshold: 27.0
+  max_dead_air_s: 1.5

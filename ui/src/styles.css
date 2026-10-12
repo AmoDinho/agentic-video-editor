@@ -1,0 +1,89 @@
+:root {
+  --bg: #0e1013;
+  --panel: #171a1f;
+  --line: #2a3038;
+  --text: #e8eaed;
+  --muted: #9aa3ad;
+  --a: #3d9cf0;
+  --b: #e0a14a;
+  --ok: #3cb371;
+  --bad: #e05d5d;
+  font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; background: var(--bg); color: var(--text); }
+a { color: var(--a); text-decoration: none; }
+.app { display: grid; grid-template-columns: 200px 1fr; height: 100%; }
+aside { border-right: 1px solid var(--line); padding: 20px 16px; background: #12151a; }
+.brand { font-weight: 700; letter-spacing: 0.16em; margin-bottom: 24px; }
+nav { display: flex; flex-direction: column; gap: 8px; }
+nav a { color: var(--muted); padding: 6px 8px; border-radius: 6px; }
+nav a.active, nav a:hover { background: var(--panel); color: var(--text); }
+main { overflow: auto; padding: 28px 32px; }
+h1 { font-size: 22px; font-weight: 600; margin: 0 0 18px; }
+h2 { font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.grid { display: grid; gap: 12px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.card, .panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+}
+.muted { color: var(--muted); font-size: 13px; }
+button, .btn {
+  background: var(--a);
+  color: #071018;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.secondary, a.btn.secondary { background: #2a3038; color: var(--text); }
+button.danger { background: var(--bad); color: white; }
+input, textarea, select {
+  background: #101318;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  width: 100%;
+}
+label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.log {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  background: #0b0d10;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  height: 280px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.tabs a { padding: 6px 10px; border-radius: 6px; color: var(--muted); }
+.tabs a.active { background: var(--panel); color: var(--text); }
+.player { width: 100%; background: black; border-radius: 10px; }
+.strip { display: flex; gap: 2px; height: 48px; margin: 12px 0; overflow-x: auto; }
+.strip .seg {
+  height: 100%;
+  min-width: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #081018;
+}
+.strip .seg.a_roll { background: var(--a); }
+.strip .seg.b_roll { background: var(--b); }
+.strip .seg.locked { outline: 2px solid white; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+.browse { max-height: 320px; overflow: auto; }
+.browse button { background: transparent; color: var(--text); display: block; width: 100%; text-align: left; padding: 6px 8px; }
+.browse button:hover { background: #222831; }
+.error { color: var(--bad); font-size: 13px; }
