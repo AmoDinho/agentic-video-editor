@@ -20,40 +20,64 @@ export type Cut = {
   segments: Segment[];
 };
 
+export type ScreenId = "empty" | "analyse" | "generate" | "compare" | "refine" | "transcript";
+export type Overlay = null | "jobs" | "cloud" | "export" | "versions" | "cloud-failed";
+
 type EditorState = {
   theme: "dark" | "light";
   projectName: string;
+  screen: ScreenId;
+  overlay: Overlay;
+  variant: "tight" | "matched" | "relaxed";
   selectedId: string | null;
   playing: boolean;
   playhead: number;
-  bottomTab: "timeline" | "transcript" | "footage";
+  bottomTab: "timeline" | "transcript" | "footage" | "compare";
   leftTab: "clips" | "styles";
-  jobsOpen: boolean;
+  struck: number[];
   setTheme: (theme: "dark" | "light") => void;
+  setScreen: (screen: ScreenId) => void;
+  setOverlay: (overlay: Overlay) => void;
+  setVariant: (variant: EditorState["variant"]) => void;
   select: (id: string | null) => void;
   togglePlay: () => void;
   setPlayhead: (seconds: number) => void;
   setBottomTab: (tab: EditorState["bottomTab"]) => void;
   setLeftTab: (tab: EditorState["leftTab"]) => void;
-  setJobsOpen: (open: boolean) => void;
+  toggleStrike: (index: number) => void;
 };
 
 export const useEditor = create<EditorState>((set) => ({
   theme: "dark",
   projectName: "Untitled project",
-  selectedId: null,
+  screen: "empty",
+  overlay: null,
+  variant: "matched",
+  selectedId: "IMG_2047.MOV",
   playing: false,
-  playhead: 0,
+  playhead: 24.1,
   bottomTab: "timeline",
   leftTab: "clips",
-  jobsOpen: false,
+  struck: [],
   setTheme: (theme) => set({ theme }),
+  setScreen: (screen) =>
+    set({
+      screen,
+      projectName: screen === "empty" ? "Untitled project" : "Wild Coast road trip",
+      overlay: null,
+      bottomTab: screen === "analyse" ? "footage" : screen === "compare" ? "compare" : screen === "transcript" ? "transcript" : "timeline",
+    }),
+  setOverlay: (overlay) => set({ overlay }),
+  setVariant: (variant) => set({ variant }),
   select: (selectedId) => set({ selectedId }),
   togglePlay: () => set((state) => ({ playing: !state.playing })),
   setPlayhead: (playhead) => set({ playhead }),
   setBottomTab: (bottomTab) => set({ bottomTab }),
   setLeftTab: (leftTab) => set({ leftTab }),
-  setJobsOpen: (jobsOpen) => set({ jobsOpen }),
+  toggleStrike: (index) =>
+    set((state) => ({
+      struck: state.struck.includes(index) ? state.struck.filter((item) => item !== index) : [...state.struck, index],
+    })),
 }));
 
 export function roleLabel(role: Role): "Talking" | "Scenic" {
