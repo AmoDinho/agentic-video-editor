@@ -47,7 +47,7 @@ class LLMClient:
         *,
         temperature: float = 0.2,
     ) -> LLMMessage:
-        if self.cfg.provider == "ollama":
+        if self.cfg.provider in {"ollama", "model_runner"}:
             return self._ollama(messages, tools, temperature)
         if self.cfg.provider == "anthropic":
             return self._anthropic(messages, tools, temperature)

@@ -29,7 +29,7 @@ class PathsConfig(BaseModel):
 
 
 class LLMConfig(BaseModel):
-    provider: Literal["ollama", "anthropic", "openai", "openai_compatible"] = "ollama"
+    provider: Literal["ollama", "model_runner", "anthropic", "openai", "openai_compatible"] = "model_runner"
     model: str = "qwen2.5:7b-instruct"
     vision_model: str = "qwen2.5vl:3b"
     base_url: str = "http://localhost:11434"
