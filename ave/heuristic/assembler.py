@@ -20,6 +20,7 @@ def assemble(
     output: OutputSpec | None = None,
     locked: list[Segment] | None = None,
     included: set[str] | None = None,
+    tightness: str = "matched",
 ) -> EDL:
     rng = np.random.default_rng(_seed(project_id))
     dist = style.get("shot_length") or {"median": 2.5, "p10": 0.8, "p90": 6.0}
@@ -63,7 +64,7 @@ def assemble(
             in_s, out_s = _speech_span(shot, in_s, out_s)
             reason = "Kept talking stretch whole; cleanest available A-roll in shooting order"
         else:
-            want = float(rng.uniform(dist.get("p10", 0.8), dist.get("p90", 6.0)))
+            want = _scenic_length(rng, dist, tightness)
             want = min(want, out_s - in_s)
             if want < 0.3:
                 continue
@@ -175,6 +176,17 @@ def snap_to_boundary_values(shot: dict[str, Any], t: float) -> float:
 
 def _overlap(a0: float, a1: float, b0: float, b1: float) -> bool:
     return min(a1, b1) - max(a0, b0) > 1e-3
+
+
+def _scenic_length(rng, dist: dict[str, Any], tightness: str) -> float:
+    low = float(dist.get("p10", 0.8))
+    high = float(dist.get("p90", 6.0))
+    mid = float(dist.get("median", (low + high) / 2))
+    if tightness == "tight":
+        return float(rng.uniform(low, mid))
+    if tightness == "relaxed":
+        return float(rng.uniform(mid, high))
+    return float(rng.uniform(low, high))
 
 
 def _seed(project_id: str) -> int:
