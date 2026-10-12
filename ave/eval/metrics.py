@@ -60,6 +60,7 @@ def score_run(
 ) -> dict[str, Any]:
     stats = evaluate(edl, analyses, style)
     stats["render_s"] = render_s
+    stats["time_to_first_cut_s"] = None
     return stats
 
 
